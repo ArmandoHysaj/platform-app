@@ -31,5 +31,18 @@ export async function getUserEmailMap(
     })
   }
 
+  const stillMissingUserIds = userIds.filter((userId) => !userEmails[userId])
+
+  await Promise.all(
+    stillMissingUserIds.map(async (userId) => {
+      const { data: userData } = await supabase.auth.admin.getUserById(userId)
+      const email = userData.user?.email
+
+      if (email) {
+        userEmails[userId] = email
+      }
+    })
+  )
+
   return userEmails
 }
