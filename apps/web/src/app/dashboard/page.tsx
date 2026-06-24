@@ -3,40 +3,7 @@ import WorkItemsClient, {
 } from '@/components/WorkItemsClient'
 import { createClient } from '@/lib/supabase/server'
 import type { WorkItem } from '@/lib/supabase/types'
-
-interface UserEmailRow {
-  id: string
-  email: string | null
-}
-
-async function getOwnerEmailMap(
-  supabase: Awaited<ReturnType<typeof createClient>>,
-  ownerIds: string[],
-  currentUser: { id: string; email?: string | null }
-) {
-  const ownerEmails: Record<string, string> = {
-    [currentUser.id]: currentUser.email ?? 'Unknown user',
-  }
-  const missingOwnerIds = ownerIds.filter((ownerId) => !ownerEmails[ownerId])
-
-  if (missingOwnerIds.length === 0) {
-    return ownerEmails
-  }
-
-  const { data } = await supabase.rpc('get_user_emails', {
-    user_ids: missingOwnerIds,
-  })
-
-  if (Array.isArray(data)) {
-    data.forEach((row: UserEmailRow) => {
-      if (row.id && row.email) {
-        ownerEmails[row.id] = row.email
-      }
-    })
-  }
-
-  return ownerEmails
-}
+import { getUserEmailMap } from '@/lib/supabase/user-emails'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -61,7 +28,7 @@ export default async function DashboardPage() {
 
   const workItems = (data ?? []) as WorkItem[]
   const ownerIds = Array.from(new Set(workItems.map((item) => item.owner_user_id)))
-  const ownerEmails = await getOwnerEmailMap(supabase, ownerIds, user)
+  const ownerEmails = await getUserEmailMap(supabase, ownerIds, user)
   const items: WorkItemWithOwner[] = workItems.map((item) => ({
     ...item,
     owner_email: ownerEmails[item.owner_user_id] ?? 'Unknown user',
