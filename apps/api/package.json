@@ -9,11 +9,11 @@
   "dependencies": {
     "@hono/node-server": "^1.19.14",
     "@supabase/supabase-js": "^2.108.2",
-    "hono": "^4.0.0"
+    "hono": "^4.12.27"
   },
   "devDependencies": {
-    "@types/node": "^20.0.0",
-    "tsx": "^4.0.0",
-    "typescript": "^5.0.0"
+    "@types/node": "^20.19.43",
+    "tsx": "^4.22.4",
+    "typescript": "^5.9.3"
   }
 }
