@@ -57,5 +57,5 @@ API variables are documented in `apps/api/.env.example`:
 
 ## Live Deployments
 
-- Web: `<add Railway web URL>`
-- API: `<add Railway API URL>`
+- Web: `https://web-production-8bbf7.up.railway.app`
+- API: `https://api-production-23e5c.up.railway.app/`
